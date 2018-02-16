@@ -524,7 +524,7 @@ func newGUI() *guiAPI {
         },
 
         sdl.K_RETURN: func() {
-          doc.Right()
+          doc.Return()
         },
 
         sdl.K_BACKSPACE: func() {
@@ -549,6 +549,14 @@ func newGUI() *guiAPI {
             return
           }
           editKey(sdl.K_QUOTE)
+        },
+
+        sdl.K_SLASH: func() {
+          if shift {
+            doc.Question()
+            return
+          }
+          editKey(sdl.K_SLASH)
         },
 
         sdl.K_HOME: func() {
@@ -586,11 +594,6 @@ func newGUI() *guiAPI {
         sdl.K_SPACE: func() {
           doc.Space()
         },
-      }
-
-      cliKey := func(key sdl.Keycode) {
-        chr := sdl.GetKeyName(key)
-        cli.Ins(chr)
       }
 
       cliKeyCase := func(key sdl.Keycode) {
@@ -716,7 +719,7 @@ func newGUI() *guiAPI {
           cliShiftPair(sdl.K_0, sdl.K_RIGHTPAREN)
         },
         sdl.K_SPACE: func() {
-          cliKey(sdl.K_SPACE)
+          cli.Ins(" ")
         },
         sdl.K_PERIOD: func() {
           cliShiftPair(sdl.K_PERIOD, sdl.K_GREATER)

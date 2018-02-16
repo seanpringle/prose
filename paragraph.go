@@ -87,6 +87,10 @@ func (self *paraAPI) IsEmpty() bool {
   return self.Len() == 0 || (self.Len() == 1 && self.Word().IsEmpty())
 }
 
+func (self *paraAPI) IsEnd() bool {
+  return self.node.Next() == nil
+}
+
 func (self *paraAPI) Len() int {
   return self.list.Len()
 }
@@ -469,4 +473,21 @@ func (self *paraAPI) WordList(min int) []string {
   }
   sort.Strings(list)
   return list
+}
+
+func (self *paraAPI) AddWord(word *wordAPI) {
+  defer self.check()
+  word.Reparent(self)
+  self.node = self.list.InsertAfter(word, self.node)
+}
+
+func (self *paraAPI) Split(next *paraAPI) {
+  defer self.check()
+  for self.node != nil && !self.Word().IsEmpty() {
+    next.AddWord(self.Word())
+    node := self.node
+    next := self.node.Next()
+    self.list.Remove(node)
+    self.node = next
+  }
 }

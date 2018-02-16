@@ -258,8 +258,13 @@ func (self *docAPI) ShiftDown() bool {
 
 func (self *docAPI) Return() {
   defer self.check()
-  self.Paragraph().Clean()
+  prev := self.Paragraph()
   self.node = self.list.InsertAfter(newPara(self), self.node)
+  next := self.Paragraph()
+  prev.Split(next)
+  prev.Clean()
+  next.Clean()
+  next.Top()
 }
 
 func (self *docAPI) Insert(str string) {
@@ -275,6 +280,14 @@ func (self *docAPI) BackSpace() {
 }
 
 func (self *docAPI) Delete() {
+  defer self.check()
+  if self.node.Next() != nil && self.Paragraph().IsEnd() {
+    next := self.node.Next().Value.(*paraAPI)
+    next.Top()
+    next.Split(self.Paragraph())
+    self.Paragraph().Right()
+    return
+  }
   self.Paragraph().Delete()
 }
 

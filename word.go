@@ -257,3 +257,7 @@ func (self *wordAPI) UCFirst() {
     break
   }
 }
+
+func (self *wordAPI) Reparent(para *paraAPI) {
+  self.para = para
+}
